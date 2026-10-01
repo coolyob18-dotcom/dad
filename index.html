@@ -3,193 +3,176 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MAXIM OS // LEVEL 36 CHALLENGE</title>
+    <title>MAXIM OS // LEVEL 36 QUEST</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #05070f; color: #f3f4f6; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; overflow: hidden; }
+        body { font-family: Courier, monospace; background-color: #05070f; color: #4ade80; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 16px; }
         
-        .game-container { max-width: 500px; width: 92%; background: #0b0f19; border: 2px solid #1f2937; border-radius: 24px; padding: 24px; text-align: center; box-shadow: 0 0 30px rgba(99, 102, 241, 0.2); position: relative; z-index: 10; transition: all 0.3s; }
-        .game-container.shake { animation: shake 0.1s ease-in-out infinite; }
-
-        h1 { font-size: 2.2rem; font-weight: 900; background: linear-gradient(to right, #818cf8, #c084fc, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 4px; letter-spacing: 2px; }
-        .subtitle { color: #4b5563; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 20px; }
-
-        /* Игровой экран уровня */
-        .level-display { background: #030712; border: 1px solid #1f2937; border-radius: 16px; padding: 16px; margin-bottom: 20px; position: relative; }
-        .lvl-title { font-size: 0.7rem; color: #818cf8; text-transform: uppercase; letter-spacing: 0.15em; }
-        .lvl-counter { font-size: 4rem; font-weight: 900; color: #c084fc; text-shadow: 0 0 15px rgba(192, 132, 252, 0.5); line-height: 1.1; margin: 4px 0; }
+        .terminal-box { max-width: 600px; width: 100%; background: #0b0f19; border: 2px solid #1f2937; border-radius: 16px; padding: 24px; box-shadow: 0 0 25px rgba(34, 197, 94, 0.2); transition: all 0.3s; }
         
-        /* Прогресс-бар */
-        .progress-bg { background: #1f2937; width: 100%; height: 12px; border-radius: 9999px; overflow: hidden; margin-top: 8px; }
-        .progress-bar { background: linear-gradient(to right, #6366f1, #ec4899); width: 0%; height: 100%; transition: width 0.1s ease-out; }
+        .header { border-bottom: 1px solid #1f2937; padding-bottom: 12px; margin-bottom: 20px; text-align: left; }
+        .system-title { font-size: 1.2rem; font-weight: bold; color: #818cf8; }
+        .status-line { color: #6b7280; font-size: 0.8rem; margin-top: 4px; }
 
-        /* Лог событий (Сюда вылетают ачивки) */
-        .terminal-log { background: #02040a; border: 1px solid #111827; border-radius: 12px; height: 130px; padding: 12px; font-family: monospace; font-size: 0.8rem; text-align: left; overflow-y: auto; margin-bottom: 24px; color: #9ca3af; line-height: 1.5; }
-        .log-entry { margin-bottom: 6px; animation: fadeIn 0.2s ease-out forwards; }
-        .system { color: #6b7280; }
-        .unlock { color: #4ade80; font-weight: bold; }
-        .alert { color: #facc15; }
+        /* Экран логов и истории */
+        .story-display { background: #030712; border: 1px solid #1f2937; border-radius: 8px; padding: 16px; min-height: 180px; max-height: 250px; overflow-y: auto; margin-bottom: 20px; font-size: 0.9rem; line-height: 1.5; text-align: left; }
+        .text-system { color: #6b7280; }
+        .text-hero { color: #c084fc; font-weight: bold; }
+        .text-reward { color: #facc15; font-weight: bold; }
 
-        /* Главное ядро для кликов */
-        .click-core { width: 140px; height: 140px; margin: 0 auto 24px; background: radial-gradient(circle, #3b82f6 0%, #1d4ed8 70%); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 6px solid #1e40af; box-shadow: 0 0 20px rgba(29, 78, 216, 0.6); transition: transform 0.05s, box-shadow 0.2s; user-select: none; }
-        .click-core:hover { box-shadow: 0 0 30px rgba(59, 130, 246, 0.8); }
-        .click-core:active { transform: scale(0.92); }
-        .core-text { font-size: 0.8rem; font-weight: 900; color: white; text-transform: uppercase; letter-spacing: 1px; pointer-events: none; }
+        /* Кнопки выбора действий */
+        .choices-container { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+        .choice-btn { background: #111827; border: 1px solid #374151; color: #4ade80; padding: 14px 16px; border-radius: 8px; cursor: pointer; text-align: left; font-family: inherit; font-size: 0.85rem; transition: all 0.2s; width: 100%; }
+        .choice-btn:hover { background: #1f2937; border-color: #4ade80; box-shadow: 0 0 10px rgba(74, 222, 128, 0.2); }
+        .choice-btn:active { transform: scale(0.98); }
 
-        /* Финальный экран */
+        /* Прогресс игрока */
+        .stats-bar { display: flex; justify-content: space-between; align-items: center; background: #030712; padding: 10px 16px; border-radius: 8px; border: 1px solid #1f2937; font-size: 0.8rem; }
+        .stat-lvl { color: #c084fc; font-weight: bold; }
+
+        /* Финальное поздравление */
         .hidden { display: none !important; }
-        .victory-screen { animation: scaleUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
-        .wish-text { font-size: 1.2rem; font-weight: 600; color: #f3f4f6; margin: 20px 0; line-height: 1.6; }
+        .victory-banner { color: #ec4899; font-size: 1.4rem; font-weight: bold; margin-bottom: 12px; text-shadow: 0 0 10px rgba(236, 72, 153, 0.4); }
+        .final-wish { font-family: sans-serif; font-size: 1.1rem; color: #f3f4f6; line-height: 1.6; margin: 20px 0; border-top: 1px solid #1f2937; padding-top: 16px; text-align: center; }
+        
+        .btn-restart { background: linear-gradient(to right, #ec4899, #6366f1); color: white; border: none; padding: 14px 28px; border-radius: 10px; font-weight: bold; cursor: pointer; font-family: sans-serif; width: 100%; box-shadow: 0 0 15px rgba(236, 72, 153, 0.3); }
 
         canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 999; }
-
-        @keyframes shake {
-            0% { transform: translate(0, 0); }
-            50% { transform: translate(1px, -1px); }
-            100% { transform: translate(-1px, 1px); }
-        }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes scaleUp { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
     </style>
 </head>
 <body>
 
-    <div class="game-container" id="gameBox">
-        <h1>MAXIM // OS</h1>
-        <div class="subtitle" id="subTitle">// Симуляция прокачки бати</div>
+    <div class="terminal-box">
+        <div class="header">
+            <div class="system-title">MAXIM // LIFE_SIMULATOR_36.EXE</div>
+            <div class="status-line">[Статус: Инициализация текстового квеста...]</div>
+        </div>
 
-        <!-- Игровая панель -->
-        <div id="interactiveZone">
-            <div class="level-display">
-                <div class="lvl-title">Текущий Уровень Отца</div>
-                <div class="lvl-counter" id="lvlStatus">1</div>
-                <div class="progress-bg">
-                    <div class="progress-bar" id="progressBar"></div>
-                </div>
-            </div>
-
-            <!-- Реактор кликов -->
-            <div class="click-core" id="coreBtn">
-                <div class="core-text">Жми ХР</div>
+        <!-- Игровая зона -->
+        <div id="gameZone">
+            <div class="story-display" id="storyDisplay"></div>
+            <div class="choices-container" id="choicesContainer"></div>
+            
+            <div class="stats-bar">
+                <div>Скилл: <span id="statSkill">Новичок</span></div>
+                <div class="stat-lvl">Уровень: <span id="statLvl">1</span> / 36</div>
             </div>
         </div>
 
-        <!-- Терминал логов -->
-        <div class="terminal-log" id="terminalLog">
-            <div class="log-entry system">[system] Нажмите на генератор ядра для запуска реактора опыта...</div>
+        <!-- Финальный экран победы -->
+        <div id="victoryZone" class="hidden">
+            <div class="victory-banner">🎉 КВЕСТ УСПЕШНО ПРОЙДЕН!</div>
+            <div class="story-display" id="victoryLogs" style="height: 120px;"></div>
+            <div class="final-wish">
+                <strong>Папа Максим!</strong> Поздравляю тебя с 36-летием! Ты крутой мужик, мастер на все руки и самый лучший отец. Пусть здоровье всегда будет на максимуме, юмор бьет ключом, а любые жизненные квесты щелкаются как орехи! 💥
+            </div>
+            <button class="btn-restart" id="fireworksBtn">⚡ ЗАПУСТИТЬ ЕЩЕ САЛЮТ!</button>
         </div>
     </div>
 
     <canvas id="canvas"></canvas>
 
     <script>
-        let currentLvl = 1;
-        let clicksInCurrentLvl = 0;
-        const clicksNeededPerLvl = 3; // Сколько раз нужно кликнуть ради 1 уровня
-        const targetLvl = 36;
-        
-        const coreBtn = document.getElementById('coreBtn');
-        const lvlStatus = document.getElementById('lvlStatus');
-        const progressBar = document.getElementById('progressBar');
-        const terminalLog = document.getElementById('terminalLog');
-        const gameBox = document.getElementById('gameBox');
-        const interactiveZone = document.getElementById('interactiveZone');
-        const subTitle = document.getElementById('subTitle');
+        // Сюжетные шаги квеста
+        const questSteps = [
+            {
+                text: "Суббота, утро. В ванной предательски закапал кран. Жена намекает на ремонт. Твоё решение, Максим?",
+                choices: [
+                    { text: "1. Взять разводной ключ, синюю изоленту и починить всё самому за 5 минут.", нext: 1, log: "Вы мастерски замотали кран. Синяя изолента добавила +10 к прочности конструкции.", lvl: 10, skill: "Мастер на все руки" },
+                    { text: "2. Вызвать сантехника из ЖЭКа и контролировать его работу суровым взглядом.", нext: 1, log: "Сантехник сделал всё под твоим личным надзором. Вы сэкономили силы.", lvl: 8, skill: "Топ-Менеджер" }
+                ]
+            },
+            {
+                text: "Сын прибегает в комнату и просит: 'Пап, помоги сделать мощный сайт на Гитхабе!'. Что делаешь?",
+                choices: [
+                    { text: "1. Сесть вместе, открыть код, объяснить как работают теги и настроить репозиторий.", нext: 2, log: "Сайт успешно запущен! Сын в восторге, уровень родительского авторитета взлетел.", lvl: 20, skill: "Цифровой Наставник" },
+                    { text: "2. Сказать: 'Сын, доверься профессионалу', и переписать весь сайт на чистом кибер-стиле.", нext: 2, log: "Сайт выглядит как пушка. Сын немного в шоке от твоих скиллов хакера.", lvl: 22, skill: "Кибер-Батя" }
+                ]
+            },
+            {
+                text: "Вечер пятницы. Индикатор усталости мигает красным. Каким способом будешь восстанавливать запасы энергии?",
+                choices: [
+                    { text: "1. Собраться с семьей, включить хороший фильм и заказать огромную пиццу.", нext: 3, log: "Шкала семейного счастья заполнена на 100%. Энергия восстановлена.", lvl: 30, skill: "Глава Семьи" },
+                    { text: "2. Засесть в гараже / за компом и пару часов побыть в тишине, собирая мысли.", нext: 3, log: "Внутренний дзен достигнут. Железные нервы снова в строю.", lvl: 29, skill: "Скала Спокойствия" }
+                ]
+            },
+            {
+                text: "Финальный рубеж! Тебе исполняется 36 лет. Компьютер выдает ошибку: 'Обнаружен критический избыток крутости'. Как поступишь?",
+                choices: [
+                    { text: "1. Принять новый статус, перегрузить систему и запустить праздничный салют!", нext: 'win', log: "Инициализация протокола Дня Рождения...", lvl: 36, skill: "Легендарный Отец" }
+                ]
+            }
+        ];
 
-        // База данных ачивок, открывающихся по ходу игры
-        const milestones = {
-            5: "🏆 ДОСТИЖЕНИЕ: [Глава Семьи] — Успешно собрана и взята под крыло лучшая команда в мире!",
-            12: "🔧 ДОСТИЖЕНИЕ: [Мастер Инженер] — Открыта способность чинить и настраивать всё силой мысли.",
-            20: "⚡ ДОСТИЖЕНИЕ: [Вечный Двигатель] — Скорость выполнения домашних дел повышена на 200%.",
-            28: "😎 ДОСТИЖЕНИЕ: [Железные Нервы] — Иммунитет к стрессу и +100 к семейному юмору.",
-            35: "⚠️ ВНИМАНИЕ: Реактор перегружен! Обнаружен критический уровень крутости!"
-        };
+        let currentStep = 0;
+        const storyDisplay = document.getElementById('storyDisplay');
+        const choicesContainer = document.getElementById('choicesContainer');
+        const statLvl = document.getElementById('statLvl');
+        const statSkill = document.getElementById('statSkill');
 
-        function addLog(text, type = '') {
-            const entry = document.createElement('div');
-            entry.className = `log-entry ${type}`;
-            entry.innerText = text;
-            terminalLog.appendChild(entry);
-            terminalLog.scrollTop = terminalLog.scrollHeight;
+        function renderStep() {
+            const step = questSteps[currentStep];
+            
+            // Выводим текст сценария
+            storyDisplay.innerHTML += `<div class="log-line text-hero">--- КВЕСТ: ШАГ ${currentStep + 1} ---</div>`;
+            storyDisplay.innerHTML += `<div class="log-line">${step.text}</div><br>`;
+            storyDisplay.scrollTop = storyDisplay.scrollHeight;
+
+            // Очищаем кнопки
+            choicesContainer.innerHTML = "";
+
+            // Добавляем новые кнопки действий
+            step.choices.forEach(choice => {
+                const btn = document.createElement('button');
+                btn.className = 'choice-btn';
+                btn.innerText = choice.text;
+                btn.onclick = () => handleChoice(choice);
+                choicesContainer.appendChild(btn);
+            });
         }
 
-        coreBtn.addEventListener('click', (e) => {
-            if (currentLvl >= targetLvl) return;
-
-            clicksInCurrentLvl++;
+        function handleChoice(choice) {
+            // Пишем результат выбора в консоль
+            storyDisplay.innerHTML += `<div class="log-line text-system">> ${choice.log}</div>`;
+            storyDisplay.innerHTML += `<div class="log-line text-reward">[+ Разблокирован титул: ${choice.skill} (Уровень поднят до ${choice.lvl})]</div><br>`;
             
-            // Эффект тряски при клике
-            gameBox.classList.add('shake');
-            setTimeout(() => gameBox.classList.remove('shake'), 50);
+            // Обновляем плашку статистики
+            statLvl.innerText = choice.lvl;
+            statSkill.innerText = choice.skill;
 
-            // Расчет прогресс-бара
-            let progressPercent = (clicksInCurrentLvl / clicksNeededPerLvl) * 100;
-            progressBar.style.width = `${progressPercent}%`;
-
-            // Лог клика
-            if (Math.random() > 0.6) {
-                const logs = ["Загрузка энергии...", "Генерация опыта...", "Синхронизация мудрости...", "Оптимизация скиллов..."];
-                addLog(`[system] ${logs[Math.floor(Math.random() * logs.length)]}`, 'system');
+            if (choice.нext === 'win') {
+                setTimeout(triggerVictory, 1000);
+            } else {
+                currentStep = choice.нext;
+                renderStep();
             }
-
-            // Ап уровня
-            if (clicksInCurrentLvl >= clicksNeededPerLvl) {
-                currentLvl++;
-                clicksInCurrentLvl = 0;
-                progressBar.style.width = '0%';
-                lvlStatus.innerText = currentLvl;
-
-                // Проверка ключевых уровней
-                if (milestones[currentLvl]) {
-                    addLog(milestones[currentLvl], 'unlock');
-                }
-
-                // Финал игры
-                if (currentLvl === targetLvl) {
-                    triggerVictory();
-                }
-            }
-        });
+        }
 
         function triggerVictory() {
-            // Перестраиваем контейнер под экран победы
-            interactiveZone.classList.add('hidden');
-            gameBox.classList.add('victory-screen');
-            subTitle.innerText = "// РЕАКТОР УСПЕШНО СИНХРОНИЗИРОВАН";
-            
-            // Замена заголовка и вывод финального поздравления
-            document.querySelector('h1').innerText = "МАКСИМ // МАКСИМАЛЬНЫЙ УРОВЕНЬ";
-            
-            terminalLog.innerHTML = `
-                <div class="log-entry unlock">🎉 СИСТЕМА ОБНОВЛЕНА ДО ВЕРСИИ 36.0!</div>
-                <div class="log-entry" style="color: #f3f4f6; font-size: 0.9rem; margin-top: 8px;">
-                    Все показатели здоровья, счастья и финансов выкручены на 100%. Ошибок в коде жизни не обнаружено.
-                </div>
+            document.getElementById('gameZone').classList.add('hidden');
+            document.getElementById('victoryZone').classList.remove('hidden');
+            document.querySelector('.status-line').innerText = "[Статус: ДОСТИГНУТ МАКСИМАЛЬНЫЙ УРОВЕНЬ]";
+
+            const victoryLogs = document.getElementById('victoryLogs');
+            victoryLogs.innerHTML = `
+                <div style="color: #4ade80;">[ok] Проверка логов жизни: ошибок не обнаружено.</div>
+                <div style="color: #c084fc;">[ok] Здоровье: 100% (с баффом мудрости).</div>
+                <div style="color: #facc15;">[ok] Текущий статус: ЛЕГЕНДАРНЫЙ ОТЕЦ.</div>
             `;
 
-            // Создаем красивую плашку с твоим поздравлением
-            const wishBox = document.createElement('div');
-            wishBox.className = 'wish-text';
-            wishBox.innerText = "Папа, с 36-летием! Ты пример во всем, оставайся всегда таким же сильным, веселым и мега-крутым! Твой сын гордится тобой! 💥";
-            
-            // Кнопка для спама салютом
-            const endBtn = document.createElement('button');
-            endBtn.innerText = "⚡ БАХНУТЬ ЕЩЕ САЛЮТА!";
-            endBtn.style.cssText = "background: linear-gradient(to right, #ec4899, #6366f1); color: white; border: none; padding: 14px 28px; border-radius: 12px; font-weight: bold; cursor: pointer; box-shadow: 0 0 15px rgba(236, 72, 153, 0.4);";
-            
-            endBtn.addEventListener('click', () => spawnExplosion());
-
-            terminalLog.parentNode.insertBefore(wishBox, terminalLog);
-            gameBox.appendChild(endBtn);
-
-            // Запуск автоматического праздничного взрыва
-            setInterval(spawnExplosion, 800);
+            // Автоматический спавн праздничных взрывов
+            setInterval(spawnExplosion, 700);
         }
 
-        // --- ДВИЖОК САЛЮТА НА CANVAS ---
+        // Запуск первого шага
+        renderStep();
+
+        // --- ДВИЖОК САЛЮТА НА CANVAS (100% РАБОЧИЙ) ---
         const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
-let particles = [];
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        
+Используйте код с осторожностью.
 function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
 window.addEventListener('resize', resize);
 resize();
@@ -209,14 +192,14 @@ ctx.fillStyle = this.color; ctx.fill(); ctx.restore();
 update() {
 this.velocity.y += this.gravity;
 this.x += this.velocity.x; this.y += this.velocity.y;
-this.alpha -= 0.012;
+this.alpha -= 0.015;
 }
 }
 function spawnExplosion() {
 const colors = ['#ec4899', '#a855f7', '#6366f1', '#4ade80', '#facc15'];
 const x = Math.random() * canvas.width;
-const y = Math.random() * (canvas.height * 0.6);
-for (let i = 0; i < 60; i++) {
+const y = Math.random() * (canvas.height * 0.5);
+for (let i = 0; i < 50; i++) {
 particles.push(new Particle(x, y, colors[Math.floor(Math.random() * colors.length)]));
 }
 }
@@ -229,3 +212,7 @@ else { p.update(); p.draw(); }
 });
 }
 animate();
+document.getElementById('fireworksBtn').addEventListener('click', () => {
+spawnExplosion();
+spawnExplosion();
+});
