@@ -3,88 +3,229 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Максим | уровень 36</title>
-    <!-- Tailwind CSS для стилей -->
-    <script src="https://jsdelivr.net"></script>
+    <title>MAXIM OS // LEVEL 36 CHALLENGE</title>
     <style>
-        @import url('https://googleapis.com');
-        body { font-family: 'Inter', sans-serif; background-color: #0b0f19; }
-        .cyber-font { font-family: 'Orbitron', sans-serif; }
-        .neon-glow { text-shadow: 0 0 10px rgba(99, 102, 241, 0.6), 0 0 20px rgba(99, 102, 241, 0.4); }
-        .neon-border { box-shadow: 0 0 15px rgba(168, 85, 247, 0.4); }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #05070f; color: #f3f4f6; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; overflow: hidden; }
+        
+        .game-container { max-width: 500px; width: 92%; background: #0b0f19; border: 2px solid #1f2937; border-radius: 24px; padding: 24px; text-align: center; box-shadow: 0 0 30px rgba(99, 102, 241, 0.2); position: relative; z-index: 10; transition: all 0.3s; }
+        .game-container.shake { animation: shake 0.1s ease-in-out infinite; }
+
+        h1 { font-size: 2.2rem; font-weight: 900; background: linear-gradient(to right, #818cf8, #c084fc, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 4px; letter-spacing: 2px; }
+        .subtitle { color: #4b5563; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 20px; }
+
+        /* Игровой экран уровня */
+        .level-display { background: #030712; border: 1px solid #1f2937; border-radius: 16px; padding: 16px; margin-bottom: 20px; position: relative; }
+        .lvl-title { font-size: 0.7rem; color: #818cf8; text-transform: uppercase; letter-spacing: 0.15em; }
+        .lvl-counter { font-size: 4rem; font-weight: 900; color: #c084fc; text-shadow: 0 0 15px rgba(192, 132, 252, 0.5); line-height: 1.1; margin: 4px 0; }
+        
+        /* Прогресс-бар */
+        .progress-bg { background: #1f2937; width: 100%; height: 12px; border-radius: 9999px; overflow: hidden; margin-top: 8px; }
+        .progress-bar { background: linear-gradient(to right, #6366f1, #ec4899); width: 0%; height: 100%; transition: width 0.1s ease-out; }
+
+        /* Лог событий (Сюда вылетают ачивки) */
+        .terminal-log { background: #02040a; border: 1px solid #111827; border-radius: 12px; height: 130px; padding: 12px; font-family: monospace; font-size: 0.8rem; text-align: left; overflow-y: auto; margin-bottom: 24px; color: #9ca3af; line-height: 1.5; }
+        .log-entry { margin-bottom: 6px; animation: fadeIn 0.2s ease-out forwards; }
+        .system { color: #6b7280; }
+        .unlock { color: #4ade80; font-weight: bold; }
+        .alert { color: #facc15; }
+
+        /* Главное ядро для кликов */
+        .click-core { width: 140px; height: 140px; margin: 0 auto 24px; background: radial-gradient(circle, #3b82f6 0%, #1d4ed8 70%); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 6px solid #1e40af; box-shadow: 0 0 20px rgba(29, 78, 216, 0.6); transition: transform 0.05s, box-shadow 0.2s; user-select: none; }
+        .click-core:hover { box-shadow: 0 0 30px rgba(59, 130, 246, 0.8); }
+        .click-core:active { transform: scale(0.92); }
+        .core-text { font-size: 0.8rem; font-weight: 900; color: white; text-transform: uppercase; letter-spacing: 1px; pointer-events: none; }
+
+        /* Финальный экран */
+        .hidden { display: none !important; }
+        .victory-screen { animation: scaleUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+        .wish-text { font-size: 1.2rem; font-weight: 600; color: #f3f4f6; margin: 20px 0; line-height: 1.6; }
+
+        canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 999; }
+
+        @keyframes shake {
+            0% { transform: translate(0, 0); }
+            50% { transform: translate(1px, -1px); }
+            100% { transform: translate(-1px, 1px); }
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes scaleUp { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
     </style>
 </head>
-<body class="text-gray-100 min-h-screen flex flex-col justify-between overflow-x-hidden">
+<body>
 
-    <!-- Навигация -->
-    <nav class="border-b border-gray-800 bg-gray-900/80 backdrop-blur-md sticky top-0 z-50">
-        <div class="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
-            <span class="cyber-font text-xl font-bold tracking-wider text-indigo-400">MAXIM // OS</span>
-            <div class="space-x-6 text-sm font-medium">
-                <a href="index.html" class="text-indigo-400 border-b-2 border-indigo-500 pb-1">Главная</a>
-                <a href="achievements.html" class="text-gray-400 hover:text-purple-400 transition">Достижения</a>
-                <a href="wishes.html" class="text-gray-400 hover:text-purple-400 transition">Пожелания</a>
+    <div class="game-container" id="gameBox">
+        <h1>MAXIM // OS</h1>
+        <div class="subtitle" id="subTitle">// Симуляция прокачки бати</div>
+
+        <!-- Игровая панель -->
+        <div id="interactiveZone">
+            <div class="level-display">
+                <div class="lvl-title">Текущий Уровень Отца</div>
+                <div class="lvl-counter" id="lvlStatus">1</div>
+                <div class="progress-bg">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+            </div>
+
+            <!-- Реактор кликов -->
+            <div class="click-core" id="coreBtn">
+                <div class="core-text">Жми ХР</div>
             </div>
         </div>
-    </nav>
 
-    <!-- Главный блок -->
-    <main class="flex-grow flex items-center justify-center px-4 py-12">
-        <div class="max-w-3xl w-full text-center space-y-8 bg-gray-900/40 p-8 rounded-3xl border border-gray-800/80 backdrop-blur-md neon-border">
+        <!-- Терминал логов -->
+        <div class="terminal-log" id="terminalLog">
+            <div class="log-entry system">[system] Нажмите на генератор ядра для запуска реактора опыта...</div>
+        </div>
+    </div>
+
+    <canvas id="canvas"></canvas>
+
+    <script>
+        let currentLvl = 1;
+        let clicksInCurrentLvl = 0;
+        const clicksNeededPerLvl = 3; // Сколько раз нужно кликнуть ради 1 уровня
+        const targetLvl = 36;
+        
+        const coreBtn = document.getElementById('coreBtn');
+        const lvlStatus = document.getElementById('lvlStatus');
+        const progressBar = document.getElementById('progressBar');
+        const terminalLog = document.getElementById('terminalLog');
+        const gameBox = document.getElementById('gameBox');
+        const interactiveZone = document.getElementById('interactiveZone');
+        const subTitle = document.getElementById('subTitle');
+
+        // База данных ачивок, открывающихся по ходу игры
+        const milestones = {
+            5: "🏆 ДОСТИЖЕНИЕ: [Глава Семьи] — Успешно собрана и взята под крыло лучшая команда в мире!",
+            12: "🔧 ДОСТИЖЕНИЕ: [Мастер Инженер] — Открыта способность чинить и настраивать всё силой мысли.",
+            20: "⚡ ДОСТИЖЕНИЕ: [Вечный Двигатель] — Скорость выполнения домашних дел повышена на 200%.",
+            28: "😎 ДОСТИЖЕНИЕ: [Железные Нервы] — Иммунитет к стрессу и +100 к семейному юмору.",
+            35: "⚠️ ВНИМАНИЕ: Реактор перегружен! Обнаружен критический уровень крутости!"
+        };
+
+        function addLog(text, type = '') {
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.innerText = text;
+            terminalLog.appendChild(entry);
+            terminalLog.scrollTop = terminalLog.scrollHeight;
+        }
+
+        coreBtn.addEventListener('click', (e) => {
+            if (currentLvl >= targetLvl) return;
+
+            clicksInCurrentLvl++;
             
-            <div class="space-y-2">
-                <div class="inline-block bg-indigo-500/10 text-indigo-400 text-xs px-4 py-1.5 rounded-full border border-indigo-500/30 uppercase tracking-widest cyber-font animate-pulse">
-                    Система инициализирована
-                </div>
-                <h1 class="text-5xl md:text-7xl font-black tracking-tight cyber-font text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-500 neon-glow py-2">
-                    МАКСИМ
-                </h1>
-            </div>
+            // Эффект тряски при клике
+            gameBox.classList.add('shake');
+            setTimeout(() => gameBox.classList.remove('shake'), 50);
 
-            <!-- Главный показатель -->
-            <div class="bg-gray-950/80 border border-gray-800 rounded-2xl p-6 max-w-sm mx-auto relative overflow-hidden">
-                <div class="absolute top-0 right-0 bg-purple-500 text-gray-950 text-[10px] font-bold px-3 py-0.5 uppercase tracking-wider rounded-bl-lg cyber-font">
-                    Current Level
-                </div>
-                <div class="text-7xl font-black cyber-text text-purple-400 my-2 tracking-widest">36</div>
-                <p class="text-gray-400 text-xs uppercase tracking-widest">Успешно загружено лет в систему</p>
-            </div>
+            // Расчет прогресс-бара
+            let progressPercent = (clicksInCurrentLvl / clicksNeededPerLvl) * 100;
+            progressBar.style.width = `${progressPercent}%`;
 
-            <!-- Характеристики -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 text-left">
-                <div class="bg-gray-900/80 border border-gray-800 p-4 rounded-xl">
-                    <div class="text-xs text-gray-500 uppercase cyber-font">Статус</div>
-                    <div class="text-sm font-semibold text-green-400 mt-1">Лучший Батя</div>
-                </div>
-                <div class="bg-gray-900/80 border border-gray-800 p-4 rounded-xl">
-                    <div class="text-xs text-gray-500 uppercase cyber-font">Юмор</div>
-                    <div class="text-sm font-semibold text-yellow-400 mt-1">100 / 100</div>
-                </div>
-                <div class="bg-gray-900/80 border border-gray-800 p-4 rounded-xl">
-                    <div class="text-xs text-gray-500 uppercase cyber-font">Опыт (XP)</div>
-                    <div class="text-sm font-semibold text-indigo-400 mt-1">Максимальный</div>
-                </div>
-                <div class="bg-gray-900/80 border border-gray-800 p-4 rounded-xl">
-                    <div class="text-xs text-gray-500 uppercase cyber-font">Мудрость</div>
-                    <div class="text-sm font-semibold text-pink-400 mt-1">Безгранична</div>
-                </div>
-            </div>
+            // Лог клика
+            if (Math.random() > 0.6) {
+                const logs = ["Загрузка энергии...", "Генерация опыта...", "Синхронизация мудрости...", "Оптимизация скиллов..."];
+                addLog(`[system] ${logs[Math.floor(Math.random() * logs.length)]}`, 'system');
+            }
 
-            <!-- Кнопка действия -->
-            <div class="pt-6">
-                <a href="achievements.html" class="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-semibold px-8 py-4 rounded-xl transition shadow-lg shadow-indigo-500/20 active:scale-95 group">
-                    Открыть дерево ачивок
-                    <svg xmlns="http://w3.org" class="h-5 w-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
-                </a>
-            </div>
+            // Ап уровня
+            if (clicksInCurrentLvl >= clicksNeededPerLvl) {
+                currentLvl++;
+                clicksInCurrentLvl = 0;
+                progressBar.style.width = '0%';
+                lvlStatus.innerText = currentLvl;
 
-        </div>
-    </main>
+                // Проверка ключевых уровней
+                if (milestones[currentLvl]) {
+                    addLog(milestones[currentLvl], 'unlock');
+                }
 
-    <!-- Подвал -->
-    <footer class="border-t border-gray-900 py-6 text-center text-xs text-gray-600 cyber-font">
-        &copy; 2026 // РАЗРАБОТАНО СПЕЦИАЛЬНО ДЛЯ ЛУЧШЕГО ОТЦА В МИРЕ
-    </footer>
-</body>
-</html>
+                // Финал игры
+                if (currentLvl === targetLvl) {
+                    triggerVictory();
+                }
+            }
+        });
 
+        function triggerVictory() {
+            // Перестраиваем контейнер под экран победы
+            interactiveZone.classList.add('hidden');
+            gameBox.classList.add('victory-screen');
+            subTitle.innerText = "// РЕАКТОР УСПЕШНО СИНХРОНИЗИРОВАН";
+            
+            // Замена заголовка и вывод финального поздравления
+            document.querySelector('h1').innerText = "МАКСИМ // МАКСИМАЛЬНЫЙ УРОВЕНЬ";
+            
+            terminalLog.innerHTML = `
+                <div class="log-entry unlock">🎉 СИСТЕМА ОБНОВЛЕНА ДО ВЕРСИИ 36.0!</div>
+                <div class="log-entry" style="color: #f3f4f6; font-size: 0.9rem; margin-top: 8px;">
+                    Все показатели здоровья, счастья и финансов выкручены на 100%. Ошибок в коде жизни не обнаружено.
+                </div>
+            `;
+
+            // Создаем красивую плашку с твоим поздравлением
+            const wishBox = document.createElement('div');
+            wishBox.className = 'wish-text';
+            wishBox.innerText = "Папа, с 36-летием! Ты пример во всем, оставайся всегда таким же сильным, веселым и мега-крутым! Твой сын гордится тобой! 💥";
+            
+            // Кнопка для спама салютом
+            const endBtn = document.createElement('button');
+            endBtn.innerText = "⚡ БАХНУТЬ ЕЩЕ САЛЮТА!";
+            endBtn.style.cssText = "background: linear-gradient(to right, #ec4899, #6366f1); color: white; border: none; padding: 14px 28px; border-radius: 12px; font-weight: bold; cursor: pointer; box-shadow: 0 0 15px rgba(236, 72, 153, 0.4);";
+            
+            endBtn.addEventListener('click', () => spawnExplosion());
+
+            terminalLog.parentNode.insertBefore(wishBox, terminalLog);
+            gameBox.appendChild(endBtn);
+
+            // Запуск автоматического праздничного взрыва
+            setInterval(spawnExplosion, 800);
+        }
+
+        // --- ДВИЖОК САЛЮТА НА CANVAS ---
+        const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+window.addEventListener('resize', resize);
+resize();
+class Particle {
+constructor(x, y, color) {
+this.x = x; this.y = y; this.color = color;
+this.radius = Math.random() * 4 + 2;
+this.velocity = { x: (Math.random() - 0.5) * 14, y: (Math.random() - 0.5) * 14 - 4 };
+this.alpha = 1;
+this.gravity = 0.12;
+}
+draw() {
+ctx.save(); ctx.globalAlpha = this.alpha; ctx.beginPath();
+ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+ctx.fillStyle = this.color; ctx.fill(); ctx.restore();
+}
+update() {
+this.velocity.y += this.gravity;
+this.x += this.velocity.x; this.y += this.velocity.y;
+this.alpha -= 0.012;
+}
+}
+function spawnExplosion() {
+const colors = ['#ec4899', '#a855f7', '#6366f1', '#4ade80', '#facc15'];
+const x = Math.random() * canvas.width;
+const y = Math.random() * (canvas.height * 0.6);
+for (let i = 0; i < 60; i++) {
+particles.push(new Particle(x, y, colors[Math.floor(Math.random() * colors.length)]));
+}
+}
+function animate() {
+requestAnimationFrame(animate);
+ctx.clearRect(0, 0, canvas.width, canvas.height);
+particles.forEach((p, i) => {
+if (p.alpha <= 0) particles.splice(i, 1);
+else { p.update(); p.draw(); }
+});
+}
+animate();
