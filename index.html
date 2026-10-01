@@ -1,1 +1,90 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Максим | уровень 36</title>
+    <!-- Tailwind CSS для стилей -->
+    <script src="https://jsdelivr.net"></script>
+    <style>
+        @import url('https://googleapis.com');
+        body { font-family: 'Inter', sans-serif; background-color: #0b0f19; }
+        .cyber-font { font-family: 'Orbitron', sans-serif; }
+        .neon-glow { text-shadow: 0 0 10px rgba(99, 102, 241, 0.6), 0 0 20px rgba(99, 102, 241, 0.4); }
+        .neon-border { box-shadow: 0 0 15px rgba(168, 85, 247, 0.4); }
+    </style>
+</head>
+<body class="text-gray-100 min-h-screen flex flex-col justify-between overflow-x-hidden">
+
+    <!-- Навигация -->
+    <nav class="border-b border-gray-800 bg-gray-900/80 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
+            <span class="cyber-font text-xl font-bold tracking-wider text-indigo-400">MAXIM // OS</span>
+            <div class="space-x-6 text-sm font-medium">
+                <a href="index.html" class="text-indigo-400 border-b-2 border-indigo-500 pb-1">Главная</a>
+                <a href="achievements.html" class="text-gray-400 hover:text-purple-400 transition">Достижения</a>
+                <a href="wishes.html" class="text-gray-400 hover:text-purple-400 transition">Пожелания</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Главный блок -->
+    <main class="flex-grow flex items-center justify-center px-4 py-12">
+        <div class="max-w-3xl w-full text-center space-y-8 bg-gray-900/40 p-8 rounded-3xl border border-gray-800/80 backdrop-blur-md neon-border">
+            
+            <div class="space-y-2">
+                <div class="inline-block bg-indigo-500/10 text-indigo-400 text-xs px-4 py-1.5 rounded-full border border-indigo-500/30 uppercase tracking-widest cyber-font animate-pulse">
+                    Система инициализирована
+                </div>
+                <h1 class="text-5xl md:text-7xl font-black tracking-tight cyber-font text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-500 neon-glow py-2">
+                    МАКСИМ
+                </h1>
+            </div>
+
+            <!-- Главный показатель -->
+            <div class="bg-gray-950/80 border border-gray-800 rounded-2xl p-6 max-w-sm mx-auto relative overflow-hidden">
+                <div class="absolute top-0 right-0 bg-purple-500 text-gray-950 text-[10px] font-bold px-3 py-0.5 uppercase tracking-wider rounded-bl-lg cyber-font">
+                    Current Level
+                </div>
+                <div class="text-7xl font-black cyber-text text-purple-400 my-2 tracking-widest">36</div>
+                <p class="text-gray-400 text-xs uppercase tracking-widest">Успешно загружено лет в систему</p>
+            </div>
+
+            <!-- Характеристики -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 text-left">
+                <div class="bg-gray-900/80 border border-gray-800 p-4 rounded-xl">
+                    <div class="text-xs text-gray-500 uppercase cyber-font">Статус</div>
+                    <div class="text-sm font-semibold text-green-400 mt-1">Лучший Батя</div>
+                </div>
+                <div class="bg-gray-900/80 border border-gray-800 p-4 rounded-xl">
+                    <div class="text-xs text-gray-500 uppercase cyber-font">Юмор</div>
+                    <div class="text-sm font-semibold text-yellow-400 mt-1">100 / 100</div>
+                </div>
+                <div class="bg-gray-900/80 border border-gray-800 p-4 rounded-xl">
+                    <div class="text-xs text-gray-500 uppercase cyber-font">Опыт (XP)</div>
+                    <div class="text-sm font-semibold text-indigo-400 mt-1">Максимальный</div>
+                </div>
+                <div class="bg-gray-900/80 border border-gray-800 p-4 rounded-xl">
+                    <div class="text-xs text-gray-500 uppercase cyber-font">Мудрость</div>
+                    <div class="text-sm font-semibold text-pink-400 mt-1">Безгранична</div>
+                </div>
+            </div>
+
+            <!-- Кнопка действия -->
+            <div class="pt-6">
+                <a href="achievements.html" class="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-semibold px-8 py-4 rounded-xl transition shadow-lg shadow-indigo-500/20 active:scale-95 group">
+                    Открыть дерево ачивок
+                    <svg xmlns="http://w3.org" class="h-5 w-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+                </a>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Подвал -->
+    <footer class="border-t border-gray-900 py-6 text-center text-xs text-gray-600 cyber-font">
+        &copy; 2026 // РАЗРАБОТАНО СПЕЦИАЛЬНО ДЛЯ ЛУЧШЕГО ОТЦА В МИРЕ
+    </footer>
+</body>
+</html>
 
